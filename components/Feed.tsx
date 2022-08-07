@@ -10,9 +10,15 @@ type Props = {
 
 function Feed({topic}: Props) {
 
-  const {data,loading} = !topic ? useQuery(getAllPosts) : useQuery(getSubRedditPosts,{
+  // const {loading,error,data} = !topic ? useQuery(getAllPosts) : useQuery(getSubRedditPosts,{
+  //   variables:{
+  //     topic: topic.includes('%20')?topic.replace('%20',' '):topic
+  //   }
+  // });
+
+  const {loading,error,data} = useQuery( !topic ? getAllPosts : getSubRedditPosts,{
     variables:{
-      topic: topic.includes('%20')?topic.replace('%20',' '):topic
+      topic: topic?.includes('%20')?topic.replace('%20',' '):topic
     }
   });
   // console.log(data)
@@ -21,7 +27,7 @@ function Feed({topic}: Props) {
   return (
     <div className='absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4'>
         <SuperBalls 
-         size={45}
+         size={95}
          speed={2.4} 
          color="#FF4501" 
         />
