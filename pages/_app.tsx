@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast'
 function MyApp({ Component, pageProps:{session, ...pageProps} }: AppProps) {
   return(
     <ApolloProvider client={client}>
+    {/* <SessionProvider session={session} basePath="https://reddit-clone-omega-eight.vercel.app/api/auth"> */}
     <SessionProvider session={session}>
       <div className='h-screen overflow-y-scroll bg-slate-200'>
         <Toaster/>
