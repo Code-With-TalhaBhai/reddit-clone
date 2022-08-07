@@ -10,37 +10,37 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_POSITIVE_VOTES, GET_VOTE_LIST_BY_ID } from '../../graphql/queries';
 import { ADD_VOTE } from '../../graphql/mutations';
 import { useSession } from 'next-auth/react';
-// import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 type Props = {
-    post: PostTyping
+    post: PostTyping | undefined;
 }
 
 const Post = ({post}: Props) => {
   
-  if(!post)
-  return (
-    <div className='absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4'>
-        <SuperBalls 
-         size={45}
-         speed={2.4} 
-         color="#FF4501" 
-         />
-      </div>
-  )
-  const {data:session} = useSession();
+  // if(!post)
+  // return (
+  //   <div className='absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4'>
+  //       <SuperBalls 
+  //        size={45}
+  //        speed={2.4} 
+  //        color="#FF4501" 
+  //        />
+  //     </div>
+  // )
 
-  const {data:AllVotes} = useQuery(GET_VOTE_LIST_BY_ID,{
+  const {data:session}:any = useSession();
+
+  const {data:AllVotes}:any = useQuery(GET_VOTE_LIST_BY_ID,{
     variables:{
-      id: post.id
+      id: post?.id
     }
   });
+
   const voteList: votes[] = AllVotes?.getVoteListById;
   
 
-  const [Add_Votes] = useMutation(ADD_VOTE
-    ,{
+  const [Add_Votes]:any = useMutation(ADD_VOTE,{
     refetchQueries:[
       {query: GET_VOTE_LIST_BY_ID},
       'getvotelistbyId'
@@ -50,9 +50,9 @@ const Post = ({post}: Props) => {
 
 
 
-  const {data:UpVotes} = useQuery(GET_POSITIVE_VOTES,{
+  const {data:UpVotes}:any = useQuery(GET_POSITIVE_VOTES,{
     variables:{
-      post_id: post.id,
+      post_id: post?.id,
       upvote: true
     }
   });
@@ -62,7 +62,7 @@ const Post = ({post}: Props) => {
 
   const {data:DownVotes} = useQuery(GET_POSITIVE_VOTES,{
     variables:{
-      post_id: post.id,
+      post_id: post?.id,
       upvote: false
     }
   });
@@ -76,9 +76,9 @@ const Post = ({post}: Props) => {
     if(session){
         Add_Votes({
           variables:{
-            post_id: post.id,
+            post_id: post?.id,
             upvote: param,
-            username: session?.user?.name
+            username: session.user.name
           }
         })
         toast.success('Vote Added');
@@ -88,7 +88,16 @@ const Post = ({post}: Props) => {
   }
 
   return (
-    <Link href={`/post/${post.id}`}>
+    <>
+    {!post?<div className='absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4'>
+         <SuperBalls 
+          size={95}
+          speed={2.4} 
+          color="#FF4501" 
+          />
+          </div>
+          :
+    <Link href={`/post/${post?.id}`}>
     <div className='flex cursor-pointer rounded-md border border-gray-300 bg-white shadow-sm hover:sm hover:border-gray-600'>
         {/* Votes */}
         <div className='flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400'>
@@ -105,25 +114,25 @@ const Post = ({post}: Props) => {
             <Link href={`subreddit/${post?.subreddit[0]?.topic}`}>
             <span className='font-bold text-black hover:text-blue-400 hover:underline'>r/{post?.subreddit[0]?.topic.toLowerCase()}</span>
             </Link>
-            &nbsp; · Posted by u/{post.username}  {' '}
-            <TimeAgo date={post.created_at}/>
+            &nbsp; · Posted by u/{post?.username}  {' '}
+            <TimeAgo date={post?.created_at}/>
             </p>         
             </div>
 
         {/* Body */}
         <div className="py-4">
-          <div className="text-xl font-semibold">{post.title}</div>
-          <div className='mt-2 text-sm font-light'>{post.body}</div>
+          <div className="text-xl font-semibold">{post?.title}</div>
+          <div className='mt-2 text-sm font-light'>{post?.body}</div>
         </div>
 
         {/* Image */}
-        <img className='w-full' src={post.image} alt="" />
+        <img className='w-full' src={post?.image} alt="" />
 
         {/* Footer */}
         <div className="flex space-x-4 text-gray-400">
           <div className="postBtns">
             <ChatAltIcon className='h-6 w-6'/>
-            <p>{post.comments.length}</p>
+            <p>{post?.comments.length}</p>
           </div>
 
           <div className="postBtns">
@@ -149,6 +158,8 @@ const Post = ({post}: Props) => {
         </div>
     </div>
     </Link>
+}
+    </>
   )
 }
 

@@ -17,13 +17,13 @@ type FormData = {
 }
 
 
-const postWidget = (props: Props) => {
-  const {register,handleSubmit,setValue,formState:{errors}} = useForm<FormData>();
+const PostWidget = (props: Props) => {
+  // const {register,handleSubmit,setValue,formState:{errors}} = useForm<FormData>();
   const {query:{postId}} = useRouter();
+  // const router = useRouter();
   const {data:session} = useSession();
 
-  const [Add_Comment,{data,error:err,loading:load}] = useMutation<comments>(ADD_COMMENT
-    ,{
+  const [Add_Comment,{data,error:err,loading:load}] = useMutation<comments>(ADD_COMMENT,{
       refetchQueries: [
         {query: getAllPosts},
         'AllPosts'
@@ -36,11 +36,12 @@ const postWidget = (props: Props) => {
         id: postId
     }
 });
+
   const post = queryData?.getPostListById;
 
-
+  const {register,handleSubmit,setValue,formState:{errors}} = useForm<FormData>();
   const onSubmit: SubmitHandler<FormData> = async(args)=>{
-    const loading = toast.loading('Posting Your Comment')
+    const loading = toast.loading('Posting Your Comment');
     await Add_Comment({
       variables: {
         post_id: postId,
@@ -114,4 +115,4 @@ const postWidget = (props: Props) => {
   )
 }
 
-export default postWidget;
+export default PostWidget;
