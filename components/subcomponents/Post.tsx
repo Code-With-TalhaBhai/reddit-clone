@@ -10,6 +10,7 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_POSITIVE_VOTES, GET_VOTE_LIST_BY_ID } from '../../graphql/queries';
 import { ADD_VOTE } from '../../graphql/mutations';
 import { useSession } from 'next-auth/react';
+// import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
 
 type Props = {
@@ -68,7 +69,7 @@ const Post = ({post}: Props) => {
   const downVoteList: votes[] = DownVotes?.getPositiveVotes;
 
 
-  const finalVotes: number = upVoteList?.length - downVoteList?.length;
+  const finalVotes: number = upVoteList?.length - downVoteList?.length || 0;
   console.log(finalVotes);
 
   const voteFunctionality = (param:boolean)=>{

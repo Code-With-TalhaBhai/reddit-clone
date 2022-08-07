@@ -22,7 +22,7 @@ const postWidget = (props: Props) => {
   const {query:{postId}} = useRouter();
   const {data:session} = useSession();
 
-  const [Add_Comment] = useMutation<comments>(ADD_COMMENT
+  const [Add_Comment,{data,error:err,loading:load}] = useMutation<comments>(ADD_COMMENT
     ,{
       refetchQueries: [
         {query: getAllPosts},
@@ -31,7 +31,7 @@ const postWidget = (props: Props) => {
     }
     );
   
-  const {data:queryData} = useQuery(getPostListByID,{
+  const {data:queryData,error,loading} = useQuery(getPostListByID,{
     variables:{
         id: postId
     }

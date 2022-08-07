@@ -10,7 +10,7 @@ type Props = {
 
 function Feed({topic}: Props) {
 
-  const {data,loading} = !topic ? useQuery(getAllPosts) : useQuery(getSubRedditPosts,{
+  const {loading,error,data} = !topic ? useQuery(getAllPosts) : useQuery(getSubRedditPosts,{
     variables:{
       topic: topic.includes('%20')?topic.replace('%20',' '):topic
     }
