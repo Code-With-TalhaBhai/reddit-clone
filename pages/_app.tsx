@@ -8,15 +8,15 @@ import { Toaster } from 'react-hot-toast'
 
 function MyApp({ Component, pageProps:{session, ...pageProps} }: AppProps) {
   return(
+    <SessionProvider session={session} basePath="https://reddit-clone-omega-eight.vercel.app/api/auth">
     <ApolloProvider client={client}>
-    <SessionProvider session={session}>
       <div className='h-screen overflow-y-scroll bg-slate-200'>
         <Toaster/>
         <Header/>
      <Component {...pageProps} />
      </div>
-     </SessionProvider>
      </ApolloProvider>
+     </SessionProvider>
   )
 }
 
