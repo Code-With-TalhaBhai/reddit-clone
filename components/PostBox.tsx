@@ -53,7 +53,6 @@ function PostBox({subreddit}: Props) {
                     }
                 })
 
-                console.log('reddit id',reddit_Id);
                 // Adding Post
                 const {data:postCheck} = await Add_Post({
                     variables:{
@@ -85,7 +84,7 @@ function PostBox({subreddit}: Props) {
             setValue("subReddit",'')
             router.reload()
         }catch(error){
-            console.log('error is',error);
+            // console.log('error is',error);
             toast.error("Something wrong while creating post")
         }
     };
