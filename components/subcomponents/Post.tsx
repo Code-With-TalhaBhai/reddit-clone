@@ -30,15 +30,6 @@ const Post = ({post}: Props) => {
   // )
 
   const {data:session}:any = useSession();
-
-  // const {data:AllVotes}:any = useQuery(GET_VOTE_LIST_BY_ID,{
-  //   variables:{
-  //     id: post?.id
-  //   }
-  // });
-
-  
-
   const [Add_Votes]:any = useMutation(ADD_VOTE,{
     refetchQueries:[
       {query: GET_VOTE_LIST_BY_ID},

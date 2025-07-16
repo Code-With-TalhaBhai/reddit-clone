@@ -3,6 +3,7 @@ import React from 'react'
 import {ChevronDownIcon, HomeIcon, MenuIcon, SearchIcon} from '@heroicons/react/solid';
 import {GlobeIcon, VideoCameraIcon, SparklesIcon, ChatIcon, BellIcon, SpeakerphoneIcon ,PlusIcon} from '@heroicons/react/outline'
 import { useSession, signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 
 
 type Props = {}
@@ -12,12 +13,12 @@ function Header({}: Props) {
     return (
         <div className='sticky top-0 z-50 flex items-center bg-white px-4 py-2 shadow-sm'>
             <div className='relative w-20 h-10 flex-shrink-0 cursor-pointer'>
-            <a href='/'>
+            <Link href='/'>
             <Image 
             src="/reddit_img.png"
             objectFit='contain'
             layout='fill'/>
-            </a>
+            </Link>
             </div>
 
             <div className="mx-7 flex items-center xl:min-w-[300px]">
