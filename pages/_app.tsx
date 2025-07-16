@@ -5,10 +5,17 @@ import Header from '../components/Header'
 import { ApolloProvider } from '@apollo/client'
 import { client } from '../apollo-client'
 import { Toaster } from 'react-hot-toast'
+import { db } from '../drizzle_schema/client'
+import { pgTable, serial, text, timestamp, varchar } from 'drizzle-orm/pg-core'
+import { sql } from 'drizzle-orm'
+import { useEffect } from 'react'
+
 
 function MyApp({ Component, pageProps:{session, ...pageProps} }: AppProps) {
+
   return(
     <SessionProvider session={session} basePath="https://reddit-clone-omega-eight.vercel.app/api/auth">
+    {/* <SessionProvider session={session} basePath="/api/auth"> */}
     <ApolloProvider client={client}>
       <div className='h-screen overflow-y-scroll bg-slate-200'>
         <Toaster/>
@@ -16,7 +23,7 @@ function MyApp({ Component, pageProps:{session, ...pageProps} }: AppProps) {
      <Component {...pageProps} />
      </div>
      </ApolloProvider>
-     </SessionProvider>
+    </SessionProvider>
   )
 }
 

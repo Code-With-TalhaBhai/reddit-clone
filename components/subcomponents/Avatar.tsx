@@ -14,7 +14,7 @@ function Avatar({seed,large}: Props) {
         <Image
         layout='fill'
         objectFit='cover'
-        src={`https://avatars.dicebear.com/api/open-peeps/${seed || 'placeholder'}.svg`} />
+        src={`https://api.dicebear.com/9.x/adventurer/svg?seed=${seed || 'placeholder'}`} />
     </div>
 
   )

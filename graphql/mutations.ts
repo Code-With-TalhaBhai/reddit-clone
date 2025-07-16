@@ -4,7 +4,7 @@ export const ADD_POST = gql`
     mutation ADD_POST(
         $title: String!
         $image: String
-        $subreddit_id: ID!
+        $subreddit_id: String!
         $body: String!
         $username: String! 
     ){
@@ -37,7 +37,8 @@ export const ADD_SUBREDDIT = gql`
 `
 
 export const ADD_COMMENT = gql`
-    mutation myMutation( $post_id: ID!
+    mutation myMutation( 
+    $post_id: String!
     $text: String!
     $username: String!
     ){
@@ -57,7 +58,7 @@ export const ADD_COMMENT = gql`
 
 export const ADD_VOTE = gql`
     mutation Vote_Mutation(
-        $post_id: ID!
+        $post_id: String!
         $upvote: Boolean!
         $username: String!
     ){

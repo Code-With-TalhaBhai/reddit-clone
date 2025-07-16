@@ -8,7 +8,7 @@ import TimeAgo from 'react-timeago'
 import Avatar from '../../components/subcomponents/Avatar';
 import Post from '../../components/subcomponents/Post';
 import { ADD_COMMENT } from '../../graphql/mutations';
-import { getAllPosts, getComments, getPostListByID } from '../../graphql/queries';
+import { getAllPosts, getPostListByID } from '../../graphql/queries';
 import { comments } from '../../typings/typings';
 
 type Props = {}
@@ -20,7 +20,7 @@ type FormData = {
 const PostWidget = (props: Props) => {
   // const {register,handleSubmit,setValue,formState:{errors}} = useForm<FormData>();
   const {query:{postId}} = useRouter();
-  // const router = useRouter();
+  const router = useRouter();
   const {data:session} = useSession();
 
   const [Add_Comment,{data,error:err,loading:load}] = useMutation<comments>(ADD_COMMENT,{
@@ -49,14 +49,14 @@ const PostWidget = (props: Props) => {
         username: session?.user?.name,
       }
     })
-    // console.log(args);
+
     setValue("comment",'');
     toast.success('New Comment Added',{
       id: loading
     })
+    router.push('/')
   };
   
-    console.log(post);
   return (
     <div className='mx-auto my-7 max-w-5xl'>
       <Post post={post}/>

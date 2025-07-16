@@ -11,13 +11,13 @@ import { GET_POSITIVE_VOTES, GET_VOTE_LIST_BY_ID } from '../../graphql/queries';
 import { ADD_VOTE } from '../../graphql/mutations';
 import { useSession } from 'next-auth/react';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 type Props = {
     post: PostTyping | undefined;
 }
 
-const Post = ({post}: Props) => {
-  
+const Post = ({post}: Props) => {  
   // if(!post)
   // return (
   //   <div className='absolute left-2/4 top-2/4 -translate-x-2/4 -translate-y-2/4'>
@@ -31,13 +31,12 @@ const Post = ({post}: Props) => {
 
   const {data:session}:any = useSession();
 
-  const {data:AllVotes}:any = useQuery(GET_VOTE_LIST_BY_ID,{
-    variables:{
-      id: post?.id
-    }
-  });
+  // const {data:AllVotes}:any = useQuery(GET_VOTE_LIST_BY_ID,{
+  //   variables:{
+  //     id: post?.id
+  //   }
+  // });
 
-  const voteList: votes[] = AllVotes?.getVoteListById;
   
 
   const [Add_Votes]:any = useMutation(ADD_VOTE,{
@@ -58,7 +57,7 @@ const Post = ({post}: Props) => {
   });
   
   const upVoteList: votes[] = UpVotes?.getPositiveVotes;
-  console.log(upVoteList);
+
 
   const {data:DownVotes} = useQuery(GET_POSITIVE_VOTES,{
     variables:{
@@ -66,11 +65,11 @@ const Post = ({post}: Props) => {
       upvote: false
     }
   });
-  const downVoteList: votes[] = DownVotes?.getPositiveVotes;
 
 
-  const finalVotes: number = upVoteList?.length - downVoteList?.length || 0;
-  console.log(finalVotes);
+const downVoteList: votes[] = DownVotes?.getPositiveVotes;
+const finalVotes: number = (upVoteList?.length || 0) - (downVoteList?.length || 0);
+
 
   const voteFunctionality = (param:boolean)=>{
     if(session){
@@ -101,9 +100,9 @@ const Post = ({post}: Props) => {
     <div className='flex cursor-pointer rounded-md border border-gray-300 bg-white shadow-sm hover:sm hover:border-gray-600'>
         {/* Votes */}
         <div className='flex flex-col items-center justify-start space-y-1 rounded-l-md bg-gray-50 p-4 text-gray-400'>
-            <ArrowUpIcon onClick={()=>voteFunctionality(true)} className='voteBtn hover:text-red-400'/>
+            <ArrowUpIcon role='button' aria-label='' onClick={()=>voteFunctionality(true)} className='voteBtn hover:text-red-400'/>
             <p className='text-xs font-bold text-black'>{finalVotes}</p>
-            <ArrowDownIcon onClick={()=>voteFunctionality(false)} className='voteBtn hover:text-blue-400'/>
+            <ArrowDownIcon role='button' onClick={()=>voteFunctionality(false)} className='voteBtn hover:text-blue-400'/>
         </div>
 
         {/* Header */}
@@ -132,7 +131,7 @@ const Post = ({post}: Props) => {
         <div className="flex space-x-4 text-gray-400">
           <div className="postBtns">
             <ChatAltIcon className='h-6 w-6'/>
-            <p>{post?.comments.length}</p>
+            <p>{post?.comments?.length || 0}</p>
           </div>
 
           <div className="postBtns">
@@ -152,7 +151,7 @@ const Post = ({post}: Props) => {
 
           <div className="postBtns">
             <DotsHorizontalIcon className='h-6 w-6'/>
-            {/* <p className='hidden sm:inline'>Save</p> */}
+            <p className='hidden sm:inline'>Save</p>
           </div>
         </div>
         </div>

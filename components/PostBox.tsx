@@ -5,9 +5,10 @@ import Avatar from './subcomponents/Avatar';
 import { LinkIcon,PhotographIcon } from '@heroicons/react/outline';
 import { client } from '../apollo-client';
 import { getAllPosts, getSubredditByTopic } from '../graphql/queries';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { ADD_POST, ADD_SUBREDDIT } from '../graphql/mutations';
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/router';
 
 
 type Props = {
@@ -31,29 +32,28 @@ function PostBox({subreddit}: Props) {
     const [Add_SubReddit] = useMutation(ADD_SUBREDDIT);
     const {data:session} = useSession();
     const [imgOpen, setImgOpen] = useState<boolean>(false);
+    const router = useRouter()
+
     const onSubmit: SubmitHandler<Inputs> = async(formData) => {
         try{
-            const {data:check} = await client.query({
+            const {data:subRedditExist} = await client.query({
                 query:  getSubredditByTopic,
                 variables:{
                     topic: subreddit || formData.subReddit.toUpperCase()
                 }
             });
 
-            console.log(check);
-            const subRedditExist = await check.getSubredditListByTopic.length>0;
-            console.log(subRedditExist)
+            const subRedditbyTopic = await subRedditExist.getSubredditListByTopic;
             const image = formData?.postImage || null;
-            if(!subRedditExist){
-                // console.log('true');
-                // Adding Subreddit
+            if(!subRedditbyTopic){
+
                 const {data:{insertSubReddit:reddit_Id}} = await Add_SubReddit({
                     variables:{
                         topic: formData.subReddit.toUpperCase()
                     }
                 })
 
-                console.log(reddit_Id);
+                console.log('reddit id',reddit_Id);
                 // Adding Post
                 const {data:postCheck} = await Add_Post({
                     variables:{
@@ -64,29 +64,28 @@ function PostBox({subreddit}: Props) {
                         username: session?.user?.name
                     }
                 })
-                // console.log(postCheck)
+
                 toast.success('Post Added In New SubReddit')
             }else{
-                console.log('false')
+
                 const {data:postID} = await Add_Post({
                     variables:{
                         title: formData.postTitle,
                         image: image,
-                        subreddit_id: check.getSubredditListByTopic[0].id,
+                        subreddit_id: subRedditbyTopic?.id,
                         body: formData.postBody,
                         username: session?.user?.name
                     }
                 })
-                // console.log(postID);
                 toast.success('Post Added In Existing SubReddit')
             }
             setValue("postBody",'')
             setValue("postImage",'')
             setValue("postTitle",'')
             setValue("subReddit",'')
-
+            router.reload()
         }catch(error){
-            console.log(error);
+            console.log('error is',error);
             toast.error("Something wrong while creating post")
         }
     };
@@ -103,7 +102,8 @@ function PostBox({subreddit}: Props) {
         disabled={!session}
         className='flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none'
         type="text"
-        placeholder={session?subreddit?`Create a post about r/${subreddit}`:"Create a post by entering a title":"Sign-In to create post"} />
+        placeholder={session?subreddit?`Create a post about r/${subreddit}`:"Create a post by entering a title":"Sign-In to create post"} 
+        />
 
         {/* Icons */}
     <PhotographIcon onClick={()=>setImgOpen(!imgOpen)} className={`icon ${imgOpen && 'text-blue-300'}`}/>
@@ -135,7 +135,6 @@ function PostBox({subreddit}: Props) {
         )}
 
             <button disabled={!session} type='submit' className='w-full outline-none rounded-full p-2 bg-blue-400 text-white'>Create Post</button>
-
         </div>
     )}
 
